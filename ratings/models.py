@@ -1,10 +1,12 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models import Avg
+from django.conf import settings
+
 
 class Rating(models.Model):
     user = models.ForeignKey(
-        'accounts.CustomUser',
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='ratings'
     )
