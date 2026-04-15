@@ -139,7 +139,7 @@ class FeaturedProjectsView(APIView):
         featured_projects = Project.objects.filter(is_featured=True)
         featured_projects = featured_projects.select_related('owner', 'category')
         featured_projects = featured_projects.prefetch_related('tags')
-        featured_projects = featured_projects.annotate(_avg=Avg('ratings__score'))
+        featured_projects = featured_projects.annotate(_avg=Avg('ratings__value'))
         featured_projects = featured_projects.order_by('-created_at')[:5]
         data = ProjectListSerializer(featured_projects, many=True)
         return Response(data.data)
@@ -152,7 +152,7 @@ class TopRatedProjectsView(APIView):
         projects = Project.objects.all()
         projects = projects.select_related('owner', 'category')
         projects = projects.prefetch_related('tags')
-        projects = projects.annotate(avg=Avg('ratings__score'))
+        projects = projects.annotate(avg=Avg('ratings__value'))
         # Put projects with no rating at the end
         projects = projects.order_by(F('avg').desc(nulls_last=True), '-created_at')
         projects = projects[:5]
