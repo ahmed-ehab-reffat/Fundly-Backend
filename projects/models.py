@@ -83,7 +83,7 @@ class Project(models.Model):
 
     @property
     def avg_rating(self):
-        average = self.ratings.aggregate(avg=Avg('score'))['avg']
+        average = self.ratings.aggregate(avg=Avg('value'))['avg']
         if average is None:
             return None
         return float(average)
