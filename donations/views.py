@@ -9,12 +9,12 @@ from projects.models import Project
 # ─── calculate progress ─────────────────────────────────────────────────────────
 def calculate_progress(project):
     total = sum([d.amount for d in project.donations.all()])
-    target = project.total_target
-    progress = (total / target) * 100 if target > 0 else 0
+    target = project.target
+    progress = project.refresh_progress()
     return {
         "total_donations": float(total),
         "target": float(target),
-        "progress": progress,
+        "progress": float(progress),
     }
 
 
@@ -62,8 +62,8 @@ def project_details(request, project_id):
     data = {
         "id": project.id,
         "title": project.title,
-        "details": project.details,
-        "target": project.total_target,
+        "details": project.description,
+        "target": project.target,
         "progress": progress,
     }
 
