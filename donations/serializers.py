@@ -6,7 +6,7 @@ class DonationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Donation
         fields = ["id", "project", "amount", "created_at"]
-        read_only_fields = ["id", "created_at"]
+        read_only_fields = ["id", "project", "created_at"]
 
 
 # ─── user history ─────────────────────────────────────────────────────────
