@@ -113,29 +113,3 @@ class ProjectImage(models.Model):
 
     def __str__(self):
         return f'Image {self.pk} for project {self.project_id}'
-
-"""
-class Rating(models.Model):
-    project = models.ForeignKey(
-        Project,
-        on_delete=models.CASCADE,
-        related_name='ratings'
-    )
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='project_ratings'
-    )
-    value = models.PositiveSmallIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(5)]
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ## one user can only rate one project once
-        unique_together = ('project', 'user') 
-        ordering = ['-created_at']
-
-    def __str__(self):
-        return f'Rating {self.value by {self.user_id} on project {self.project_id}'
-"""

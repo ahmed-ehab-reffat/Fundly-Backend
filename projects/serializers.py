@@ -182,15 +182,3 @@ class ProjectWriteSerializer(serializers.ModelSerializer):
             for image in images:
                 ProjectImage.objects.create(project=project, image=image)
         return project
-
-"""
-class RatingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Rating
-        fields = ['score']
-
-    def validate_score(self, value):
-        if value < 1 or value > 5:
-            raise serializers.ValidationError('Score must be between 1 and 5.')
-        return value
-"""
