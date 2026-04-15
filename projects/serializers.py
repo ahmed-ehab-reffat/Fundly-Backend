@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from .models import Category, Project, Tag
+from .models import Category, Project, ProjectImage, Tag
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -19,13 +19,21 @@ class TagSerializer(serializers.ModelSerializer):
 class OwnerSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ['id', 'username']
+        fields = ['id', 'email']
+
+
+class ProjectImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectImage
+        fields = ['id', 'image', 'created_at']
+        read_only_fields = ['id', 'created_at']
 
 
 class ProjectListSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     tags = TagSerializer(many=True, read_only=True)
-    owner = serializers.CharField(source='owner.username', read_only=True)
+    images = ProjectImageSerializer(many=True, read_only=True)
+    owner = serializers.CharField(source='owner.email', read_only=True)
     avg_rating = serializers.SerializerMethodField()
 
     class Meta:
@@ -35,6 +43,10 @@ class ProjectListSerializer(serializers.ModelSerializer):
             'title',
             'category',
             'tags',
+            'images',
+            'target',
+            'start_time',
+            'end_time',
             'status',
             'progress',
             'is_featured',
@@ -59,6 +71,7 @@ class ProjectListSerializer(serializers.ModelSerializer):
 class ProjectDetailSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     tags = TagSerializer(many=True, read_only=True)
+    images = ProjectImageSerializer(many=True, read_only=True)
     owner = OwnerSerializer(read_only=True)
     avg_rating = serializers.SerializerMethodField()
 
@@ -71,6 +84,10 @@ class ProjectDetailSerializer(serializers.ModelSerializer):
             'description',
             'category',
             'tags',
+            'images',
+            'target',
+            'start_time',
+            'end_time',
             'status',
             'progress',
             'is_featured',
@@ -102,6 +119,11 @@ class ProjectWriteSerializer(serializers.ModelSerializer):
         many=True,
         required=False,
     )
+    images = serializers.ListField(
+        child=serializers.ImageField(),
+        required=False,
+        write_only=True,
+    )
 
     class Meta:
         model = Project
@@ -110,15 +132,48 @@ class ProjectWriteSerializer(serializers.ModelSerializer):
             'description',
             'category',
             'tags',
+            'images',
+            'target',
+            'start_time',
+            'end_time',
             'status',
-            'progress',
             'is_featured',
         ]
 
-    def validate_progress(self, value):
-        if value is not None and (value < 0 or value > 100):
-            raise serializers.ValidationError('Progress must be between 0 and 100.')
-        return value
+    def validate(self, attrs):
+        start_time = attrs.get('start_time')
+        end_time = attrs.get('end_time')
+
+        if self.instance is not None:
+            if start_time is None:
+                start_time = self.instance.start_time
+            if end_time is None:
+                end_time = self.instance.end_time
+
+        if start_time and end_time and end_time <= start_time:
+            raise serializers.ValidationError(
+                {'end_time': 'End time must be after start time.'}
+            )
+        return attrs
+
+    def create(self, validated_data):
+        ## removes the 'images' key from the validated_data dictionary and assigns the array of files to the images variable
+        images = validated_data.pop('images', [])
+        ## creates the project and returns it
+        project = super().create(validated_data)
+        ## creates the project images and returns them
+        for image in images:
+            ProjectImage.objects.create(project=project, image=image)
+        return project
+
+    def update(self, instance, validated_data):
+        images = validated_data.pop('images', None)
+        project = super().update(instance, validated_data)
+        if images is not None:
+            project.images.all().delete()
+            for image in images:
+                ProjectImage.objects.create(project=project, image=image)
+        return project
 
 """
 class RatingSerializer(serializers.ModelSerializer):

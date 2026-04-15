@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.db.models import Avg
+from django.db.models import Avg, Sum
 from django.utils.text import slugify
 
 
@@ -61,6 +61,11 @@ class Project(models.Model):
     )
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
+    target = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        validators=[MinValueValidator(1)],
+    )
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
@@ -69,6 +74,8 @@ class Project(models.Model):
         related_name='projects'
     )
     tags = models.ManyToManyField(Tag, related_name='projects', blank=True)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
     progress = models.PositiveSmallIntegerField(
         default=0,
@@ -81,6 +88,20 @@ class Project(models.Model):
     class Meta:
         ordering = ['-created_at']
 
+    def calculate_progress(self):
+        total_donations = self.donations.aggregate(total=Sum('amount'))['total'] or 0
+        if self.target <= 0:
+            return 0
+        progress = int((total_donations / self.target) * 100)
+        return min(progress, 100)
+
+    def refresh_progress(self):
+        progress = self.calculate_progress()
+        if self.progress != progress:
+            self.progress = progress
+            self.save(update_fields=['progress', 'updated_at'])
+        return self.progress
+
     @property
     def avg_rating(self):
         average = self.ratings.aggregate(avg=Avg('value'))['avg']
@@ -90,6 +111,18 @@ class Project(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class ProjectImage(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='project_images/')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f'Image {self.pk} for project {self.project_id}'
 
 """
 class Rating(models.Model):
@@ -103,7 +136,7 @@ class Rating(models.Model):
         on_delete=models.CASCADE,
         related_name='project_ratings'
     )
-    score = models.PositiveSmallIntegerField(
+    value = models.PositiveSmallIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)]
     )
     created_at = models.DateTimeField(auto_now_add=True)
@@ -114,5 +147,5 @@ class Rating(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f'Rating {self.score} by {self.user_id} on project {self.project_id}'
+        return f'Rating {self.value by {self.user_id} on project {self.project_id}'
 """
