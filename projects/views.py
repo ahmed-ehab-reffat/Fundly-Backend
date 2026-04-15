@@ -22,7 +22,7 @@ class ProjectListCreateView(APIView):
     def get(self, request):
         projects = Project.objects.select_related('owner', 'category')
         projects = projects.prefetch_related('tags')
-        projects = projects.annotate(_avg=Avg('ratings__score'))
+        projects = projects.annotate(_avg=Avg('ratings__value'))
 
         category_slug = request.query_params.get('category')
         tag_slug = request.query_params.get('tag')
