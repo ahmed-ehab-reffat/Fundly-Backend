@@ -46,8 +46,8 @@ class ProjectListCreateView(APIView):
         serializer = ProjectWriteSerializer(data=request.data)
         if serializer.is_valid():
             project = serializer.save(owner=request.user)
-            project = Project.objects.select_related('owner', 'category')
-            project = project.prefetch_related('tags', 'images').get(id=project.id)
+            project_qs = Project.objects.select_related('owner', 'category')
+            project = project_qs.prefetch_related('tags', 'images').get(id=project.id)
             data = ProjectDetailSerializer(project)
             return Response(data.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
