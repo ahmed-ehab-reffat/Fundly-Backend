@@ -156,7 +156,7 @@ class AdminUserSerializer(serializers.ModelSerializer):
             "is_staff",
             "is_email_verified",
             "created_at",
-        ]
+        ] 
         read_only_fields = (
             "id",
             "email",

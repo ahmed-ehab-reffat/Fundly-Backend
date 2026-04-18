@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Category, Project, Tag
+from .models import Category, Project, ProjectImage, Tag
 
 
 @admin.register(Category)
@@ -15,14 +15,6 @@ class TagAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug']
     readonly_fields = ['slug']
     search_fields = ['name']
-
-""""
-@admin.register(Rating)
-class RatingAdmin(admin.ModelAdmin):
-    list_display = ['project', 'user', 'score', 'created_at']
-    list_filter = ['score', 'created_at']
-    search_fields = ['project__title', 'user__username']
-"""
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
@@ -53,3 +45,10 @@ class ProjectAdmin(admin.ModelAdmin):
     def make_not_featured(self, request, queryset):
         count = queryset.update(is_featured=False)
         self.message_user(request, f'Removed featured flag from {count} project(s).')
+
+
+@admin.register(ProjectImage)
+class ProjectImageAdmin(admin.ModelAdmin):
+    list_display = ['id', 'project', 'created_at']
+    list_filter = ['created_at']
+    search_fields = ['project__title']

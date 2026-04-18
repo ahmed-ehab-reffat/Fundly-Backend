@@ -9,7 +9,7 @@ class RatingCreateView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         project = serializer.validated_data['project']
-        if project.creator == self.request.user:
+        if project.owner == self.request.user:
             raise PermissionDenied("You can't rate your own project")
         serializer.save(user=self.request.user)
 
