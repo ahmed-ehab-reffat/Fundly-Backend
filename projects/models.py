@@ -112,4 +112,4 @@ class ProjectImage(models.Model):
         ordering = ['created_at']
 
     def __str__(self):
-        return f'Image {self.pk} for project {self.project_id}'
+        return f'Rating {self.score} by {self.user_id} on project {self.project_id}'
