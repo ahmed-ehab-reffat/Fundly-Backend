@@ -18,16 +18,16 @@
 
 ## 📋 Table of Contents
 
-* [Overview](https://claude.ai/chat/0f3f1d8f-fed6-441d-afc0-a28c0f91a290#-overview)
-* [Features](https://claude.ai/chat/0f3f1d8f-fed6-441d-afc0-a28c0f91a290#-features)
-* [Tech Stack](https://claude.ai/chat/0f3f1d8f-fed6-441d-afc0-a28c0f91a290#-tech-stack)
-* [Project Structure](https://claude.ai/chat/0f3f1d8f-fed6-441d-afc0-a28c0f91a290#-project-structure)
-* [Getting Started](https://claude.ai/chat/0f3f1d8f-fed6-441d-afc0-a28c0f91a290#-getting-started)
-* [Environment Variables](https://claude.ai/chat/0f3f1d8f-fed6-441d-afc0-a28c0f91a290#-environment-variables)
-* [API Reference](https://claude.ai/chat/0f3f1d8f-fed6-441d-afc0-a28c0f91a290#-api-reference)
-* [Authentication Flow](https://claude.ai/chat/0f3f1d8f-fed6-441d-afc0-a28c0f91a290#-authentication-flow)
-* [Data Models](https://claude.ai/chat/0f3f1d8f-fed6-441d-afc0-a28c0f91a290#-data-models)
-* [Deployment](https://claude.ai/chat/0f3f1d8f-fed6-441d-afc0-a28c0f91a290#-deployment)
+* [Overview](#-overview)
+* [Features](#-features)
+* [Tech Stack](#-tech-stack)
+* [Project Structure](#-project-structure)
+* [Getting Started](#-getting-started)
+* [Environment Variables](#-environment-variables)
+* [API Reference](#-api-reference)
+* [Authentication Flow](#-authentication-flow)
+* [Data Models](#-data-models)
+* [Deployment](#-deployment)
 
 ---
 
