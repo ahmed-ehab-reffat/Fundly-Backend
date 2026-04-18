@@ -25,9 +25,11 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
     'django_filters',
+    'anymail',
 
     # Our apps (add these as we create them)
     'accounts',
+
     'projects',
     'donations',
     'comments',
@@ -128,14 +130,12 @@ CORS_ALLOWED_ORIGINS = [
 # Frontend URL (used for activation & reset links in emails)
 FRONTEND_URL = 'http://localhost:5173'
 
-# Email
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_PORT = config('EMAIL_PORT', cast=int)
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# Email — SendGrid via AnyMail
+EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
+ANYMAIL = {
+    'SENDGRID_API_KEY': config('SENDGRID_API_KEY'),
+}
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='ibrahim.mostafa9939@gmail.com')
 
 # Media files (user uploads)
 MEDIA_URL = '/media/'
