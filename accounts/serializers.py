@@ -168,7 +168,7 @@ class AdminUserSerializer(serializers.ModelSerializer):
             "is_active",
             "is_staff",
             "is_email_verified",
-            "created_at",
+            "created_at",  
         )
 
 
@@ -185,4 +185,3 @@ class DeleteAccountSerializer(serializers.Serializer):
 
         return value
 
-        
