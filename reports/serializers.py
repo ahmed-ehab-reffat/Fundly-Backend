@@ -15,3 +15,8 @@ class ReportSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("You can't report a project and a comment at the same time")
         
         return data
+
+
+class ReasonChoicesSerializer(serializers.Serializer):
+    value = serializers.CharField()
+    label = serializers.CharField()

@@ -129,13 +129,13 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 # Frontend URL (used for activation & reset links in emails)
-FRONTEND_URL = config('FRONTEND_URL_DEPLOY', default='http://localhost:5173'),
+FRONTEND_URL = config('FRONTEND_URL_DEPLOY', default='http://localhost:5173')
 
 
 # Email — SendGrid via AnyMail
 EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
 ANYMAIL = {
-    'SENDGRID_API_KEY': config('SENDGRID_API_KEY'),
+    'SENDGRID_API_KEY': config('SENDGRID_API_KEY')
 }
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='ibrahim.mostafa9939@gmail.com')
 
